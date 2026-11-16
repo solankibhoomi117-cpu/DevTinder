@@ -1,0 +1,6 @@
+
+node_modules/
+.env
+.env.*
+!.env.example
+devtinder_users_with_readable_passwords.json
