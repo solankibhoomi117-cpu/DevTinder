@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const connectdb = require("./config/database");
 const app = express();
@@ -13,9 +14,9 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
-  }),
+  })
 );
 app.use(express.json());
 app.use(cookieparser());
@@ -30,13 +31,30 @@ app.use("/", profileroute);
 app.use("/", requestroute);
 app.use("/", userroute);
 
-connectdb()
-  .then(() => {
-    console.log("Database connected successfully");
-    app.listen(8080, () => {
-      console.log("Server is listening on port 8080 ....");
-    });
-  })
-  .catch((err) => {
-    console.log(err.message);
+const dbReady = connectdb();
+
+dbReady.catch((err) => {
+  console.error("Database connection failed:", err);
+});
+
+app.use(async (req, res, next) => {
+  try {
+    await dbReady;
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Database connection failed" });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.json({ message: "DevTinder API is running!" });
+});
+
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(process.env.PORT || 8080, () => {
+    console.log("Server is running");
   });
+}
