@@ -9,10 +9,10 @@
   "license": "ISC",
   "author": "Bhoomi solanki",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon src/app.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
