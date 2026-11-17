@@ -73,10 +73,9 @@ userroute.get("/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
-    const page = parseInt(req.query.page);
-    let limit = parseInt(req.query.limit);
-    limit = limit > 50 ? 50 : limit;
-    const skip = (page - 1) * limit;
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+let limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+const skip = (page - 1) * limit;
 
     const USER_SAFE_DATA = [
       "firstName",
