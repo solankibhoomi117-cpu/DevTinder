@@ -1,8 +1,8 @@
 
 require("dotenv").config();
 
-const express = require("express");
 const cors = require("cors");
+const express = require("express");
 const cookieParser = require("cookie-parser");
 
 const connectdb = require("./config/database");
@@ -11,12 +11,16 @@ const app = express();
 
 app.use(
   cors({
-   origin: [
-        "http://localhost:5173",
-        "https://dev-tinder-frontened-git-main-bhoomi-b62a.vercel.app"
+    origin: [
+      "https://dev-tinder-frontened-nu.vercel.app",
+      "https://dev-tinder-frontened-git-main-bhoomi-b62a.vercel.app",
+      "http://localhost:5173"
     ],
-    credentials: true
-}));
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());

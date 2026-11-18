@@ -3,7 +3,6 @@ const authrouter = express.Router();
 const User = require("../models/User");
 const { validatesignupdata } = require("../utils/validate");
 const bcrypt = require("bcrypt");
-const cookieparser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("../middlewares/auth");
 
@@ -57,11 +56,11 @@ authrouter.post("/login", async (req, res) => {
       const token = await user.getJWT();
 
       // Add the token to cookie and send the response back
-     res.cookie("token", token, {
-  expires: new Date(Date.now() + 8 * 3600000),
-  httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+    res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    expires: new Date(Date.now() + 8 * 3600000)
 });
       res.send(user);
     } else {
@@ -73,9 +72,11 @@ authrouter.post("/login", async (req, res) => {
 });
 
 authrouter.post("/logout", async (req, res) => {
-  res.cookie("token", null, {
-    expires: new Date(Date.now() + 8 * 3600000),
-  });
+ res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none"
+});
   res.send("Logout successfully");
 });
 module.exports = authrouter;
